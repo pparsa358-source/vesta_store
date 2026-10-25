@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پنل مدیریت | VESTA</title>
+  <link rel="stylesheet" href="admin.css">
+  <script src="admin.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">VESTA<span>.</span></a>
+    <div>
+      <span class="admin-label">پنل مدیریت</span>
+      <a href="index.html" class="view-store">مشاهده فروشگاه ↗</a>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <section class="welcome">
+      <div>
+        <span class="eyebrow">مدیریت فروشگاه</span>
+        <h1>محصولاتت را مدیریت کن.</h1>
+        <p>محصول اضافه کن، قیمت‌ها را تغییر بده و موجودی سایزها را کنترل کن.</p>
+      </div>
+    </section>
+
+    <section class="stats">
+      <article class="stat-card">
+        <span>تعداد محصولات</span>
+        <strong id="stat-products">۰</strong>
+      </article>
+      <article class="stat-card">
+        <span>مجموع موجودی</span>
+        <strong id="stat-stock">۰</strong>
+      </article>
+      <article class="stat-card">
+        <span>ارزش تقریبی موجودی</span>
+        <strong id="stat-value">۰ تومان</strong>
+      </article>
+    </section>
+
+    <section class="panel" id="category-management">
+      <div class="panel-heading">
+        <div><span class="eyebrow">ساختار فروشگاه</span><h2>مدیریت دسته‌بندی‌ها</h2></div>
+      </div>
+      <p class="category-help">ابتدا سطحی را انتخاب کن و نام دسته‌بندی را اضافه کن. برای ساخت دسته فرعی، والد آن را از فهرست‌ها انتخاب کن.</p>
+      <div class="form-grid category-manager-grid">
+        <label>سطحی که می‌خواهی اضافه کنی
+          <select id="category-level"><option value="main">دسته‌بندی اصلی</option><option value="sub1">دسته‌بندی فرعی ۱</option><option value="sub2">دسته‌بندی فرعی ۲</option></select>
+        </label>
+        <label>نام دسته‌بندی جدید
+          <input id="new-category-name" maxlength="60" placeholder="مثلاً لباس مردانه">
+        </label>
+        <label id="category-parent-label">دسته‌بندی والد
+          <select id="category-parent"><option value="">انتخاب دسته‌بندی اصلی</option></select>
+        </label>
+        <label id="category-subparent-label" hidden>دسته‌بندی فرعی ۱ والد
+          <select id="category-subparent"><option value="">ابتدا والد را انتخاب کن</option></select>
+        </label>
+      </div>
+      <div class="form-actions"><button type="button" class="primary" id="add-category-button">افزودن دسته‌بندی</button></div>
+      <div id="category-tree" class="category-tree"></div>
+      <p id="category-message" role="status" class="message"></p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">اطلاعات کالا</span>
+          <h2 id="form-title">افزودن محصول جدید</h2>
+        </div>
+        <button type="button" id="cancel-edit" class="secondary" hidden>
+          انصراف از ویرایش
+        </button>
+      </div>
+
+      <form id="product-form">
+        <input type="hidden" id="product-id">
+
+        <div class="form-grid">
+          <label>
+            نام محصول *
+            <input id="name" required maxlength="100"
+                   placeholder="مثلاً تیشرت مینیمال">
+          </label>
+
+          <label>دسته‌بندی اصلی *
+            <select id="category" required></select>
+          </label>
+          <label>دسته‌بندی فرعی ۱
+            <select id="subcategory-1"><option value="">بدون دسته‌بندی فرعی</option></select>
+          </label>
+          <label>دسته‌بندی فرعی ۲
+            <select id="subcategory-2"><option value="">بدون دسته‌بندی فرعی</option></select>
+          </label>
+
+          <label>
+            قیمت (تومان) *
+            <input id="price" type="number" required min="0"
+                   step="1000" placeholder="490000">
+          </label>
+
+          <label>
+            تخفیف (درصد)
+            <input id="discount" type="number" min="0" max="90"
+                   step="1" value="0">
+          </label>
+
+          <label>
+            برچسب محصول
+            <input id="tag" maxlength="30"
+                   placeholder="جدید، پرفروش...">
+          </label>
+
+          <label>
+            سایزها *
+            <input id="sizes" required
+                   placeholder="S, M, L, XL">
+            <small>سایزها را با ویرگول انگلیسی جدا کن.</small>
+          </label>
+
+          <label class="full-width">
+            موجودی هر سایز *
+            <input id="stock" required
+                   placeholder="S:10, M:8, L:5, XL:2">
+            <small>برای کفش: 40:3, 41:5, 42:4</small>
+          </label>
+
+          <label class="full-width">
+            آدرس اینترنتی عکس‌ها
+            <textarea id="image-url" rows="3" placeholder="برای هر عکس یک آدرس اینترنتی وارد کن؛ هر آدرس در یک خط"></textarea>
+            <small>برای هر محصول چند عکس وارد کن؛ آدرس هر عکس را در یک خط جدا بنویس. اگر عکس اینترنتی نداری، از بخش انتخاب فایل استفاده کن.</small>
+          </label>
+
+          <label class="full-width">
+            انتخاب چند عکس از کامپیوتر
+            <input id="image-file" type="file" multiple
+                   accept="image/jpeg,image/png,image/webp">
+            <small>فرمت JPG، PNG یا WebP؛ هر عکس حداکثر ۸ مگابایت. تصاویر پیش از ذخیره فشرده می‌شوند.</small>
+          </label>
+
+          <div class="preview-wrap full-width" id="preview-wrap">
+            <img id="image-preview" alt="پیش‌نمایش عکس محصول" hidden>
+            <span id="preview-placeholder">پیش‌نمایش عکس‌های محصول</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="primary" id="save-button">
+            ذخیره محصول
+          </button>
+          <button type="reset" class="secondary" id="reset-button">
+            پاک کردن فرم
+          </button>
+        </div>
+
+        <p id="form-message" role="status" class="message"></p>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading list-heading">
+        <div>
+          <span class="eyebrow">فهرست کالاها</span>
+          <h2>محصولات فروشگاه</h2>
+        </div>
+        <input id="admin-search" type="search"
+               placeholder="جست‌وجوی محصول...">
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>محصول</th>
+              <th>قیمت</th>
+              <th>تخفیف</th>
+              <th>موجودی</th>
+              <th>عملیات</th>
+            </tr>
+          </thead>
+          <tbody id="product-list"></tbody>
+        </table>
+      </div>
+
+      <p id="empty-list" class="empty" hidden>
+        هنوز محصولی ثبت نشده است.
+      </p>
+    </section>
+
+
+    <section class="panel" id="orders-panel">
+      <div class="panel-heading list-heading">
+        <div>
+          <span class="eyebrow">مدیریت فروش</span>
+          <h2>سفارش‌های ثبت‌شده</h2>
+        </div>
+        <input id="order-search" type="search" placeholder="جست‌وجوی شماره سفارش، نام یا تلفن...">
+      </div>
+      <div class="table-wrap">
+        <table class="orders-table">
+          <thead><tr><th>سفارش</th><th>مشتری و تماس</th><th>اقلام</th><th>مبلغ</th><th>وضعیت</th><th>تاریخ</th></tr></thead>
+          <tbody id="order-list"></tbody>
+        </table>
+      </div>
+      <p id="empty-orders" class="empty" hidden>هنوز سفارشی ثبت نشده است.</p>
+      <p class="order-hint">لغو سفارش، موجودی اقلام آن را یک‌بار به انبار برمی‌گرداند. این نسخه هنوز پرداخت آنلاین ندارد.</p>
+    </section>
+
+    <p class="disclaimer">
+      نسخه آزمایشی: اطلاعات در همین مرورگر ذخیره می‌شوند.
+      این پنل هنوز دارای ورود امن مدیر یا پایگاه داده آنلاین نیست.
+    </p>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

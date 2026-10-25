@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f5f0">
+  <title>وِستا | فروشگاه لباس و کفش</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="announcement">
+    استایل جدیدت را پیدا کن | ارسال رایگان برای سفارش‌های بالای ۲ میلیون تومان
+  </div>
+
+  <header class="header">
+    <a href="#" class="logo">VESTA<span>.</span></a>
+
+    <nav class="nav">
+      <a href="#home">خانه</a>
+      <a href="#shop" data-nav-category="all">همه محصولات</a>
+      <a href="#shop" data-nav-category="clothes">لباس</a>
+      <a href="#shop" data-nav-category="shoes">کفش</a>
+    </nav>
+
+    <button class="cart-button" id="open-cart">
+      سبد خرید <span id="cart-count">۰</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <span class="eyebrow">مجموعه جدید · ۱۴۰۵</span>
+        <h1>استایل تو،<br>قانون توست.</h1>
+        <p>
+          لباس و کفش‌هایی برای روزهایی که می‌خواهی
+          خودت باشی؛ ساده، خاص و متفاوت.
+        </p>
+        <a class="primary-button" href="#shop">مشاهده محصولات ←</a>
+      </div>
+
+      <div class="hero-image">
+        <img
+          src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=85"
+          alt="استایل مدرن و لباس‌های روزمره"
+        >
+        <div class="hero-label">
+          <span>NEW COLLECTION</span>
+          <strong>ساده بپوش، متفاوت باش.</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="shop-section" id="shop">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">منتخب برای تو</span>
+          <h2>محصولات فروشگاه</h2>
+        </div>
+        <p id="result-count">در حال نمایش محصولات</p>
+      </div>
+
+      <div class="toolbar">
+        <div class="filters">
+          <button class="filter active" data-category="all">همه</button>
+          <button class="filter" data-category="clothes">لباس</button>
+          <button class="filter" data-category="shoes">کفش</button>
+        </div>
+
+        <input
+          type="search"
+          id="search"
+          placeholder="جست‌وجوی محصول..."
+          aria-label="جست‌وجوی محصول"
+        >
+      </div>
+
+      <div class="product-grid" id="product-grid"></div>
+      <p class="empty-message" id="empty-message" hidden>
+        محصولی با این مشخصات پیدا نشد.
+      </p>
+    </section>
+
+    <section class="newsletter">
+      <span class="eyebrow">همراه وِستا باش</span>
+      <h2>همیشه یک استایل تازه وجود دارد.</h2>
+      <p>فروشگاه ما را دنبال کن و مجموعه‌های جدید را ببین.</p>
+      <a class="primary-button" href="#shop">شروع خرید</a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a href="#home" class="logo">VESTA<span>.</span></a>
+    <p>استایل خوب از انتخاب خوب شروع می‌شود.</p>
+    <small>© ۱۴۰۵ وِستا — نمونه اولیه فروشگاه</small>
+  </footer>
+
+  <div class="overlay" id="overlay" hidden></div>
+
+  <aside class="cart-panel" id="cart-panel"
+         role="dialog" aria-modal="true" aria-label="سبد خرید" hidden>
+    <div class="cart-header">
+      <h2>سبد خرید تو</h2>
+      <button id="close-cart" class="icon-button" aria-label="بستن">✕</button>
+    </div>
+
+    <div id="cart-items" class="cart-items"></div>
+
+    <form id="checkout-form" class="checkout-form" hidden>
+      <h3>اطلاعات تحویل سفارش</h3>
+      <label>نام و نام خانوادگی *<input id="customer-name" required maxlength="100" autocomplete="name" placeholder="نام گیرنده"></label>
+      <label>شماره تماس *<input id="customer-phone" required type="tel" inputmode="tel" maxlength="20" autocomplete="tel" placeholder="09xxxxxxxxx"></label>
+      <label>آدرس کامل *<textarea id="customer-address" required maxlength="600" rows="3" autocomplete="street-address" placeholder="بعد از انتخاب نقطه روی نقشه، آدرس اینجا قرار می‌گیرد؛ پلاک و واحد را تکمیل کن."></textarea></label>
+      <div class="delivery-map-section">
+        <strong>مکان تحویل روی نقشه</strong>
+        <p>روی نقشه محل تحویل را لمس یا کلیک کن. آدرس تقریبی به‌صورت خودکار در کادر آدرس نوشته می‌شود؛ پلاک و واحد را خودت تکمیل کن.</p>
+        <div id="delivery-map" role="application" aria-label="نقشه انتخاب محل تحویل"></div>
+        <p id="map-status" class="map-status" aria-live="polite">در حال آماده‌سازی نقشه…</p>
+        <input type="hidden" id="delivery-lat">
+        <input type="hidden" id="delivery-lng">
+      </div>
+      <label>توضیحات (اختیاری)<textarea id="customer-notes" maxlength="300" rows="2" placeholder="توضیحات برای تحویل"></textarea></label>
+      <button type="submit" class="primary-button full-button">ثبت سفارش</button>
+      <button type="button" id="back-to-cart" class="secondary full-button">بازگشت به سبد خرید</button>
+      <p class="cart-note">ثبت سفارش در این نسخه آزمایشی است؛ پرداخت آنلاین فعال نیست.</p>
+    </form>
+
+    <div class="cart-footer" id="cart-footer">
+      <div class="total-row">
+        <span>مبلغ کل</span>
+        <strong id="cart-total">۰ تومان</strong>
+      </div>
+      <button id="checkout" class="primary-button full-button">
+        ادامه سفارش
+      </button>
+      <p class="cart-note">
+        این نسخه آزمایشی است و هنوز پرداخت آنلاین ندارد.
+      </p>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
